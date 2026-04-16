@@ -1,1 +1,0 @@
-# Azure-Sentinel-Alert-Pipeline
