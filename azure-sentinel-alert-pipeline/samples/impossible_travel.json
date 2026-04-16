@@ -1,0 +1,18 @@
+[
+  {
+    "UserPrincipalName": "ceo@contoso.onmicrosoft.com",
+    "LocationCount": 2,
+    "Locations": ["US / WA / Redmond", "SG / 01 / Singapore"],
+    "IPs": ["20.124.88.17", "103.214.68.231"],
+    "FirstSeen": "2026-04-15T06:14:22Z",
+    "LastSeen": "2026-04-15T06:38:09Z"
+  },
+  {
+    "UserPrincipalName": "j.reed@contoso.onmicrosoft.com",
+    "LocationCount": 3,
+    "Locations": ["US / NY / New York", "BR / SP / Sao Paulo", "PL / MZ / Warsaw"],
+    "IPs": ["73.14.229.18", "177.89.12.4", "195.34.89.221"],
+    "FirstSeen": "2026-04-15T05:02:11Z",
+    "LastSeen": "2026-04-15T05:51:33Z"
+  }
+]

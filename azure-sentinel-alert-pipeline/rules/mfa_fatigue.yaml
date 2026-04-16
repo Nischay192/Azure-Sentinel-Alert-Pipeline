@@ -1,0 +1,46 @@
+# Nischay | 2026
+# mfa_fatigue.yaml
+
+id: AS-003
+name: MFA Fatigue / Push Bombing
+description: >
+  Detects 5 or more MFA challenges denied or timed out for the
+  same account in a 10 minute window. This is the signature of an
+  MFA fatigue attack, where an attacker who already has the
+  password spams push notifications hoping the user will eventually
+  tap approve just to make them stop.
+base_severity: High
+tactics:
+  - InitialAccess
+  - CredentialAccess
+techniques:
+  - T1621
+real_world_reference: >
+  In September 2022 Uber was breached by an 18 year old Lapsus$
+  affiliate who first bought a contractor's Uber password off the
+  dark web, then spent over an hour spamming MFA push prompts
+  until the contractor tapped approve. From there the attacker
+  pivoted to Uber's internal Slack, AWS, and GCP environments.
+  MFA fatigue is now one of the top initial access vectors
+  flagged by Microsoft and CISA.
+entity_fields:
+  account: UserPrincipalName
+  source_ips: SourceIPs
+volume_field: MfaPromptCount
+volume_bump_threshold: 15
+query: |
+  SigninLogs
+  | where TimeGenerated > ago(1h)
+  | where ResultType in (50074, 50158, 500121)
+  | summarize MfaPromptCount = count(),
+              FirstPrompt = min(TimeGenerated),
+              LastPrompt = max(TimeGenerated),
+              SourceIPs = make_set(IPAddress)
+              by UserPrincipalName, bin(TimeGenerated, 10m)
+  | where MfaPromptCount >= 5
+  | extend WindowMinutes = datetime_diff('minute', LastPrompt, FirstPrompt)
+recommended_actions:
+  - Immediately revoke active sessions for the affected user
+  - Reset the password and treat it as fully exposed
+  - Enable number-matching MFA to defeat blind push approval
+  - Review Conditional Access policies to require compliant devices

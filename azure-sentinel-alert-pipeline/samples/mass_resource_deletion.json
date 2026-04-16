@@ -1,0 +1,18 @@
+[
+  {
+    "Caller": "automation-svc@contoso.onmicrosoft.com",
+    "CallerIpAddress": "52.168.33.14",
+    "DeleteCount": 142,
+    "FirstDelete": "2026-04-15T07:02:41Z",
+    "LastDelete": "2026-04-15T07:07:18Z",
+    "Operations": [
+      "Microsoft.Compute/virtualMachines/delete",
+      "Microsoft.Storage/storageAccounts/delete",
+      "Microsoft.Network/networkInterfaces/delete",
+      "Microsoft.Compute/disks/delete",
+      "Microsoft.Network/publicIPAddresses/delete"
+    ],
+    "ResourceGroups": ["rg-prod-web", "rg-prod-db", "rg-prod-api"],
+    "ResourceGroup": "rg-prod-web"
+  }
+]

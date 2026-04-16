@@ -1,0 +1,51 @@
+# Nischay | 2026
+# mass_resource_deletion.yaml
+
+id: AS-005
+name: Mass Resource Deletion Burst
+description: >
+  Detects 10 or more Azure resource delete operations by the same
+  caller within a 5 minute window. In a healthy tenant, resource
+  deletions are rare and deliberate. A burst of deletes is either
+  a destructive insider, a compromised account running a
+  ransomware-style wipe, or a runaway automation about to take
+  out production infrastructure.
+base_severity: Critical
+tactics:
+  - Impact
+techniques:
+  - T1485
+real_world_reference: >
+  The Code Spaces incident in 2014 is the textbook case: an
+  attacker got into the company's AWS console and, when Code
+  Spaces refused to pay ransom, deleted every S3 bucket, EBS
+  snapshot, AMI, and EC2 instance in the account. The company
+  was out of business within 12 hours. The same destructive
+  playbook is now a common ransomware tactic in Azure tenants,
+  which means detection has to be fast enough to interrupt the
+  attacker mid-loop.
+entity_fields:
+  caller: Caller
+  source_ip: CallerIpAddress
+  resource_group: ResourceGroup
+volume_field: DeleteCount
+volume_bump_threshold: 50
+query: |
+  AzureActivity
+  | where TimeGenerated > ago(1h)
+  | where OperationNameValue endswith "/delete"
+  | where ActivityStatusValue == "Success"
+  | summarize DeleteCount = count(),
+              FirstDelete = min(TimeGenerated),
+              LastDelete = max(TimeGenerated),
+              Operations = make_set(OperationNameValue, 20),
+              ResourceGroups = make_set(ResourceGroup, 20)
+              by Caller, CallerIpAddress, bin(TimeGenerated, 5m)
+  | where DeleteCount >= 10
+  | extend ResourceGroup = tostring(ResourceGroups[0])
+  | order by DeleteCount desc
+recommended_actions:
+  - Disable the caller account immediately to stop ongoing deletes
+  - Check if the deleted resources had soft-delete or Recovery Services backups
+  - Correlate CallerIpAddress with other suspicious sign-in activity
+  - Verify whether the affected resources were tagged production critical

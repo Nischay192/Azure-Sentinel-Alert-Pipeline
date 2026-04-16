@@ -1,0 +1,18 @@
+[
+  {
+    "UserPrincipalName": "contractor01@contoso.onmicrosoft.com",
+    "MfaPromptCount": 47,
+    "FirstPrompt": "2026-04-15T01:18:03Z",
+    "LastPrompt": "2026-04-15T02:41:17Z",
+    "SourceIPs": ["193.32.163.11"],
+    "WindowMinutes": 83
+  },
+  {
+    "UserPrincipalName": "dev.helper@contoso.onmicrosoft.com",
+    "MfaPromptCount": 6,
+    "FirstPrompt": "2026-04-15T04:22:14Z",
+    "LastPrompt": "2026-04-15T04:29:58Z",
+    "SourceIPs": ["194.147.90.56"],
+    "WindowMinutes": 7
+  }
+]

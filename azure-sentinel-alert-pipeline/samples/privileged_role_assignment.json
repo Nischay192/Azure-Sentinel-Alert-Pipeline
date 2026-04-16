@@ -1,0 +1,16 @@
+[
+  {
+    "TimeGenerated": "2026-04-15T03:47:22Z",
+    "ActorUPN": "sysadmin@contoso.onmicrosoft.com",
+    "TargetUPN": "temp.consultant@contoso.onmicrosoft.com",
+    "RoleName": "\"Global Administrator\"",
+    "CorrelationId": "b1f8a29c-4e72-4a19-bd83-9f2a7c0d5e41"
+  },
+  {
+    "TimeGenerated": "2026-04-15T04:55:09Z",
+    "ActorUPN": "helpdesk02@contoso.onmicrosoft.com",
+    "TargetUPN": "helpdesk02@contoso.onmicrosoft.com",
+    "RoleName": "\"Privileged Role Administrator\"",
+    "CorrelationId": "7c2e83f5-19a4-4c8b-b1f4-0d9e82b7a3c6"
+  }
+]

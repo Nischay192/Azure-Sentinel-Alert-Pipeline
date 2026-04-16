@@ -1,0 +1,43 @@
+# Nischay | 2026
+# brute_force_signin.yaml
+
+id: AS-001
+name: Brute Force Sign-in Attempts
+description: >
+  Detects 10 or more failed Azure AD sign-in attempts from the same
+  IP address against the same account in a short window. This is
+  the signature pattern of credential stuffing and password
+  spraying against exposed identity endpoints.
+base_severity: Medium
+tactics:
+  - InitialAccess
+  - CredentialAccess
+techniques:
+  - T1110
+real_world_reference: >
+  In 2022 the Lapsus$ group compromised Microsoft, Okta, Nvidia,
+  and Samsung using credential-based attacks against Azure AD and
+  similar identity providers. Detecting these patterns at the
+  sign-in log layer is the earliest and most reliable place to
+  catch the attack, long before an MFA prompt is ever approved.
+entity_fields:
+  account: UserPrincipalName
+  source_ip: IPAddress
+  location: Location
+volume_field: FailureCount
+volume_bump_threshold: 50
+query: |
+  SigninLogs
+  | where TimeGenerated > ago(1h)
+  | where ResultType != 0
+  | summarize FailureCount = count(),
+              FirstFailure = min(TimeGenerated),
+              LastFailure = max(TimeGenerated)
+              by UserPrincipalName, IPAddress, Location
+  | where FailureCount >= 10
+  | order by FailureCount desc
+recommended_actions:
+  - Reset the user's password in case the attacker succeeded elsewhere
+  - Block the source IP at the Conditional Access policy or network edge
+  - Review all sign-in activity from the same IP for successful logins
+  - Verify the user is enrolled in MFA, and enroll immediately if not

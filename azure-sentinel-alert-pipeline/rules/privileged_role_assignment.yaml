@@ -1,0 +1,54 @@
+# Nischay | 2026
+# privileged_role_assignment.yaml
+
+id: AS-004
+name: Privileged Role Assignment
+description: >
+  Detects any assignment of a privileged Azure AD directory role
+  such as Global Administrator, Privileged Role Administrator, or
+  Application Administrator via the Azure AD audit log. Every
+  assignment is worth reviewing in real time because it takes
+  exactly one of these to move from a toe-hold to full tenant
+  compromise.
+base_severity: High
+tactics:
+  - PrivilegeEscalation
+  - Persistence
+techniques:
+  - T1098
+real_world_reference: >
+  The 2024 Midnight Blizzard (APT29) breach of Microsoft corporate
+  email worked exactly this way. After an initial password spray
+  against a legacy non-production tenant, the attackers created an
+  OAuth application, granted it full_access_as_app to Exchange
+  Online, and then assigned it privileged roles. A detection at
+  the AuditLogs layer would have flagged the role assignment
+  within seconds of it happening.
+entity_fields:
+  actor: ActorUPN
+  target: TargetUPN
+  role_added: RoleName
+query: |
+  AuditLogs
+  | where TimeGenerated > ago(1h)
+  | where OperationName == "Add member to role"
+  | where Result == "success"
+  | extend RoleName = tostring(TargetResources[0].modifiedProperties[1].newValue)
+  | extend TargetUPN = tostring(TargetResources[0].userPrincipalName)
+  | extend ActorUPN = tostring(InitiatedBy.user.userPrincipalName)
+  | where RoleName has_any (
+      '"Global Administrator"',
+      '"Privileged Role Administrator"',
+      '"User Administrator"',
+      '"Security Administrator"',
+      '"Exchange Administrator"',
+      '"SharePoint Administrator"',
+      '"Application Administrator"',
+      '"Cloud Application Administrator"'
+    )
+  | project TimeGenerated, ActorUPN, TargetUPN, RoleName, CorrelationId
+recommended_actions:
+  - Verify the role change was approved through your change management process
+  - If unauthorized, remove the role and force sign-out for the target account
+  - Audit every action taken by the target account since the assignment
+  - Investigate the actor account for signs of compromise or social engineering

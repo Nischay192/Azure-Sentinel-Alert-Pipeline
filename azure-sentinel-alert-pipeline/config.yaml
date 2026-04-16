@@ -1,0 +1,8 @@
+# Nischay | 2026
+# config.yaml
+
+dry_run: true
+
+workspace_id: "REPLACE-WITH-YOUR-LOG-ANALYTICS-WORKSPACE-ID"
+tenant_id: "REPLACE-WITH-YOUR-TENANT-ID"
+lookback_hours: 1

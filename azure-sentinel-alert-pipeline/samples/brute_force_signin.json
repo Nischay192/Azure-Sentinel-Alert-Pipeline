@@ -1,0 +1,26 @@
+[
+  {
+    "UserPrincipalName": "john.admin@contoso.onmicrosoft.com",
+    "IPAddress": "45.227.253.109",
+    "Location": "RU / MOW / Moscow",
+    "FailureCount": 73,
+    "FirstFailure": "2026-04-15T03:12:04Z",
+    "LastFailure": "2026-04-15T03:21:48Z"
+  },
+  {
+    "UserPrincipalName": "svc-backups@contoso.onmicrosoft.com",
+    "IPAddress": "185.220.101.44",
+    "Location": "DE / BE / Berlin",
+    "FailureCount": 18,
+    "FirstFailure": "2026-04-15T02:51:10Z",
+    "LastFailure": "2026-04-15T02:59:55Z"
+  },
+  {
+    "UserPrincipalName": "marketing@contoso.onmicrosoft.com",
+    "IPAddress": "89.248.171.23",
+    "Location": "NL / NH / Amsterdam",
+    "FailureCount": 12,
+    "FirstFailure": "2026-04-15T04:03:22Z",
+    "LastFailure": "2026-04-15T04:10:51Z"
+  }
+]

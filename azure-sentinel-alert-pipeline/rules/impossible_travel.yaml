@@ -1,0 +1,44 @@
+# Nischay | 2026
+# impossible_travel.yaml
+
+id: AS-002
+name: Impossible Travel Between Sign-ins
+description: >
+  Detects successful Azure AD sign-ins for the same account from
+  two or more different countries within a one hour window. A
+  legitimate user cannot physically be in two countries an hour
+  apart, so this is either a stolen credential being replayed or a
+  compromised session cookie being used from another continent.
+base_severity: High
+tactics:
+  - InitialAccess
+techniques:
+  - T1078
+real_world_reference: >
+  Impossible travel is one of the earliest and most dependable
+  indicators of credential theft. Microsoft, Okta, and every major
+  identity provider flag it as a top-tier signal. The 2024
+  Midnight Blizzard breach of Microsoft corporate email began with
+  a password spray against a legacy tenant, and post-compromise
+  sign-ins showed exactly this pattern.
+entity_fields:
+  account: UserPrincipalName
+  locations: Locations
+  ip_addresses: IPs
+query: |
+  SigninLogs
+  | where TimeGenerated > ago(2h)
+  | where ResultType == 0
+  | summarize LocationCount = dcount(Location),
+              Locations = make_set(Location),
+              IPs = make_set(IPAddress),
+              FirstSeen = min(TimeGenerated),
+              LastSeen = max(TimeGenerated)
+              by UserPrincipalName, bin(TimeGenerated, 1h)
+  | where LocationCount >= 2
+  | where datetime_diff('minute', LastSeen, FirstSeen) <= 60
+recommended_actions:
+  - Revoke all active refresh tokens for the user immediately
+  - Force a password reset and treat the credential as exposed
+  - Enable Conditional Access policy requiring MFA from unfamiliar IPs
+  - Check if either IP address is a known VPN or Tor egress point
