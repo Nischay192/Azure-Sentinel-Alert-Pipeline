@@ -7,6 +7,24 @@ A Python pipeline that runs custom KQL detection rules against an Azure Sentinel
 
 The pipeline works in two modes: **dry-run** against canned sample data (no credentials, no Azure cost) and **live** mode against a real Log Analytics workspace via the official `azure-monitor-query` SDK. The same code path handles both, which means you can demo the whole thing on a laptop and then flip one config flag to point it at production.
 
+---
+
+## Architecture
+
+```mermaid
+flowchart TD
+    A[KQL Detection Rules] --> B[Python Detection Pipeline]
+    B --> C[Azure Monitor Query SDK]
+    C --> D[Azure Sentinel / Log Analytics Workspace]
+
+    D --> E[Detection Matches]
+    E --> F[Severity Scoring Engine]
+    F --> G[Structured Incident Generation]
+
+    G --> H[JSON Incident Tickets]
+    G --> I[SOC Workflow / Alert Review]
+```
+
 ## What It Does
 
 1. Loads every detection rule from `rules/*.yaml`. Each rule has metadata (MITRE tactics, base severity, entity fields, real-world references) plus a real KQL query written against the same tables Sentinel exposes — `SigninLogs`, `AuditLogs`, `AzureActivity`.
