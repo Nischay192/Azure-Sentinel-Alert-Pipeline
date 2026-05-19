@@ -211,3 +211,11 @@ Every design choice in the pipeline points toward making new rules cheap to add.
 6. Save the file in `rules/`, create a matching sample JSON in `samples/`, and run `python3 pipeline.py`.
 
 No registration step. The loader picks it up on the next run.
+
+## Lessons Learned
+
+- Gained hands-on experience integrating Python applications with Microsoft Sentinel and Azure Log Analytics using the Azure Monitor Query SDK
+- Improved understanding of KQL-based threat detection, SIEM workflows, and MITRE ATT&CK-aligned incident analysis within Azure environments
+- Learned the importance of secure authentication practices using `DefaultAzureCredential` and Azure CLI authentication instead of hardcoded secrets
+- Developed practical experience troubleshooting Azure SDK compatibility issues, log ingestion configuration, and live Sentinel workspace integrations
+- Strengthened understanding of detection engineering concepts including alert enrichment, severity scoring, and rule-based threat prioritization
